@@ -8,25 +8,21 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Tahoma', sans-serif; }
         body { background-color: #f7f9fa; color: #333; padding-bottom: 80px; }
         
-        /* الهيدر واللوجو */
         header { background: linear-gradient(135deg, #d35400, #e67e22); color: white; padding: 20px; text-align: center; position: relative; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .logo-container { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 8px; }
         .logo-icon { font-size: 36px; background: white; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; border-radius: 50%; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
         header h1 { font-size: 24px; font-weight: bold; text-shadow: 1px 1px 3px rgba(0,0,0,0.2); }
         header p { font-size: 13px; opacity: 0.95; }
         
-        /* النص المتحرك */
         .ticker-container { background: #2c3e50; color: #f1c40f; padding: 8px 0; overflow: hidden; white-space: nowrap; font-size: 13px; font-weight: bold; }
         .ticker-container marquee { width: 100%; }
 
-        /* زر الإدارة في الأعلى */
         .top-buttons { position: absolute; top: 15px; left: 15px; z-index: 10; }
         .action-chip { background: rgba(0,0,0,0.3); color: white; border: none; padding: 6px 12px; border-radius: 20px; font-size: 11px; cursor: pointer; backdrop-filter: blur(5px); transition: 0.2s; }
         .action-chip:hover { background: rgba(0,0,0,0.5); }
 
         .container { max-width: 950px; margin: 20px auto; padding: 0 15px; }
 
-        /* شريط التنقل الرئيسي والأقسام (مع زر الرئيسية في بدايته) */
         .nav-bar { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 20px; background: white; padding: 10px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .nav-btn { background: #f1f2f6; border: 1px solid #dcdde1; color: #2f3640; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 13px; font-weight: bold; white-space: nowrap; transition: 0.3s; }
         .nav-btn.active, .nav-btn:hover { background: #d35400; color: white; border-color: #d35400; }
@@ -34,7 +30,6 @@
 
         .section-title { font-size: 18px; margin-bottom: 15px; color: #d35400; border-bottom: 2px solid #d35400; padding-bottom: 5px; display: flex; justify-content: space-between; align-items: center; }
         
-        /* شبكة المنتجات */
         .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 25px; }
         .card { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 3px 8px rgba(0,0,0,0.08); text-align: center; padding-bottom: 15px; display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.2s; }
         .card:hover { transform: translateY(-3px); }
@@ -46,12 +41,10 @@
         .btn { background: #27ae60; color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: bold; transition: 0.2s; }
         .btn:hover { background: #219653; }
         
-        /* زر السلة العائم أسفل الشاشة */
         .floating-cart-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #2c3e50; color: white; padding: 12px 25px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 -4px 15px rgba(0,0,0,0.2); z-index: 100; cursor: pointer; }
         .floating-cart-bar span { font-weight: bold; }
         .view-cart-btn { background: #e67e22; color: white; border: none; padding: 6px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; }
 
-        /* النوافذ المنبثقة (Modals) */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; }
         .modal-content { background: white; width: 90%; max-width: 520px; padding: 25px; border-radius: 12px; max-height: 90vh; overflow-y: auto; position: relative; box-shadow: 0 5px 20px rgba(0,0,0,0.3); }
         .close-modal { position: absolute; top: 12px; left: 18px; font-size: 22px; cursor: pointer; color: #888; }
@@ -66,7 +59,6 @@
         .form-group label { display: block; font-size: 13px; margin-bottom: 4px; font-weight: bold; color: #444; }
         .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 9px; border: 1px solid #ccc; border-radius: 6px; font-size: 13px; }
 
-        /* لوحة تحكم وإدارة الفرن */
         #admin-panel { display: none; background: white; border: 2px solid #d35400; padding: 20px; border-radius: 10px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(211,84,0,0.15); }
         .order-card { background: #fff8f0; border: 1px solid #f39c12; padding: 15px; border-radius: 8px; margin-bottom: 12px; position: relative; }
         .order-header { display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 8px; color: #d35400; border-bottom: 1px dashed #ddd; padding-bottom: 5px; }
@@ -96,7 +88,6 @@
         <p style="font-size: 11px; margin-top: 6px; opacity: 0.9;">العنوان: بابل - الحلة - خدمي الجمعية - مجاور دينار سنتر</p>
     </header>
 
-    <!-- النص المتحرك -->
     <div class="ticker-container">
         <marquee behavior="scroll" direction="right" scrollamount="5">
             ✨ أهلاً بكم في أفران أطيب خشّش | توصيل فوري لجميع أنحاء مدينة الحلة | تتوفر لدينا أطعمة وصمون حجري ساخن طوال اليوم 🥖🥐 حلويات وكيك طازج يومياً 🎂
@@ -105,14 +96,12 @@
 
     <div class="container">
 
-        <!-- لوحة تحكم وإدارة الفرن -->
         <div id="admin-panel">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 2px solid #d35400; padding-bottom: 10px;">
                 <h2 style="color: #d35400; font-size: 18px;">🔐 لوحة إدارة الفرن والمنتجات</h2>
                 <button class="btn" style="background: #7f8c8d; padding: 5px 10px; font-size: 12px;" onclick="toggleAdminPanel()">إغلاق اللوحة</button>
             </div>
 
-            <!-- قسم إضافة منتج جديد -->
             <div style="background: #fff9f0; border: 1px solid #f39c12; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
                 <h3 style="font-size: 15px; margin-bottom: 10px; color: #d35400;">➕ إضافة منتج جديد للقائمة</h3>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
@@ -145,7 +134,6 @@
                 <button class="btn" onclick="addNewProduct()">إضافة المنتج للقائمة</button>
             </div>
 
-            <!-- قسم تعديل وحذف المنتجات الحالية -->
             <div style="background: white; border: 1px solid #ddd; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
                 <h3 style="font-size: 15px; margin-bottom: 10px; color: #2980b9;">✏️ تعديل أو حذف المنتجات الحالية</h3>
                 <div style="overflow-x: auto; max-height: 250px;">
@@ -163,19 +151,17 @@
                 </div>
             </div>
 
-            <!-- قسم متابعة الطلبات الواردة -->
             <div style="background: #eef2f3; padding: 15px; border-radius: 8px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
                     <h3 style="font-size: 15px; color: #2c3e50;">📋 الطلبات الواردة من الزبائن</h3>
                     <button class="btn" style="background: #e74c3c; padding: 4px 8px; font-size: 11px;" onclick="clearAllOrders()">مسح كافة الطلبات</button>
                 </div>
                 <div id="incoming-orders-list">
-                    <p style="color: #888; text-align: center;">لا توجد طلبات جديدة حالياً.</p>
+                    <p style="color: #888; text-align: center;">لا توجد طلبات جديدة حالياً في جهازك.</p>
                 </div>
             </div>
         </div>
 
-        <!-- شريط الأقسام (زر الرئيسية أصبح أول زر هنا) -->
         <div class="nav-bar" id="categories-bar">
             <button class="nav-btn home-tab active" onclick="goToHome(this)">🏠 الرئيسية</button>
             <button class="nav-btn" onclick="filterCategory('صمون ومعجنات', this)">🍞 صمون ومعجنات</button>
@@ -192,13 +178,11 @@
         <div class="products-grid" id="products-container"></div>
     </div>
 
-    <!-- شريط السلة العائم أسفل الشاشة -->
     <div class="floating-cart-bar" onclick="openCartModal()">
         <div>🛒 سلة الطلبات: <span id="cart-count">0</span> منتج</div>
         <div>المجموع: <span id="floating-total">0</span> د.ع <button class="view-cart-btn">مراجعة السلة</button></div>
     </div>
 
-    <!-- نافذة تفاصيل السلة وإدخال المعلومات (Modal) -->
     <div class="modal" id="cart-modal">
         <div class="modal-content">
             <span class="close-modal" onclick="closeCartModal()">&times;</span>
@@ -221,7 +205,6 @@
                 <span><span id="total-price">2,000</span> د.ع</span>
             </div>
 
-            <!-- معلومات الزبون المطلوبة -->
             <div style="border-top: 1px dashed #ccc; padding-top: 15px; margin-top: 15px;">
                 <h3 style="font-size: 15px; margin-bottom: 10px; color: #2c3e50;">معلومات الزبون للتوصيل</h3>
                 <div class="form-group">
@@ -250,6 +233,9 @@
     </footer>
 
     <script>
+        // رابط Google Sheets الخاص بك مدمج هنا
+        const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbxC11O6oIpPUecSnJTe5Tm7noNa8UQT8rVm5djiNmibXoSKFB8KrAxN0iQGRAo-nabG/exec";
+
         let products = JSON.parse(localStorage.getItem('bakery_products')) || [
             { id: 1, name: "صمون حجري حار", category: "صمون ومعجنات", price: 1000, desc: "صمون حجري طازج وحار ساخن وخفيف.", img: "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=300" },
             { id: 2, name: "معجنات مشكلة بالجبن", category: "صمون ومعجنات", price: 3000, desc: "تشكيلة فاخرة من المعجنات بالجبن واللحم.", img: "https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=300" },
@@ -471,28 +457,40 @@
 
             let subTotal = cart.reduce((sum, item) => sum + item.price, 0);
             let grandTotal = subTotal + deliveryFee;
+            let itemsSummary = cart.map(i => `${i.name} (${i.price} د.ع)`).join('، ');
+
+            let orderData = {
+                name: name,
+                phone: phone,
+                address: address,
+                notes: notes || 'لا توجد ملاحظات',
+                items: itemsSummary,
+                grandTotal: grandTotal + ' د.ع'
+            };
 
             let newOrder = {
                 id: Date.now().toString().slice(-6),
                 date: new Date().toLocaleTimeString('ar-IQ', { hour: '2-digit', minute: '2-digit' }),
-                name,
-                phone,
-                address,
-                notes: notes || 'لا توجد ملاحظات',
-                items: [...cart],
-                subTotal,
-                grandTotal,
-                status: 'قيد التحضير ⏳'
+                name, phone, address, notes: notes || 'لا توجد ملاحظات',
+                items: [...cart], subTotal, grandTotal, status: 'قيد التحضير ⏳'
             };
-
             orders.unshift(newOrder);
             localStorage.setItem('bakery_orders', JSON.stringify(orders));
+
+            if(GOOGLE_SHEET_URL) {
+                fetch(GOOGLE_SHEET_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(orderData)
+                }).catch(err => console.log(err));
+            }
 
             cart = [];
             updateCartUI();
             closeCartModal();
 
-            alert('✅ تم إرسال طلبك بنجاح إلى إدارة الفرن! سيتم تحضيره وتوصيله قريباً.');
+            alert('✅ تم إرسال طلبك بنجاح إلى إدارة الفرن!');
             updateAdminOrdersUI();
         }
 
@@ -520,7 +518,7 @@
 
             if(!list) return;
             if(orders.length === 0) {
-                list.innerHTML = '<p style="color: #888; text-align: center;">لا توجد طلبات جديدة حالياً.</p>';
+                list.innerHTML = '<p style="color: #888; text-align: center;">لا توجد طلبات جديدة حالياً في جهازك.</p>';
                 return;
             }
 
