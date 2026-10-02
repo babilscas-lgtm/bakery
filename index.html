@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أفران أطيب خشّش - الحلة</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Tahoma', sans-serif; }
+        body { background-color: #f7f9fa; color: #333; padding-bottom: 80px; }
+        
+        /* الهيدر واللوجو */
+        header { background: linear-gradient(135deg, #d35400, #e67e22); color: white; padding: 20px; text-align: center; position: relative; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .logo-container { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 8px; }
+        .logo-icon { font-size: 36px; background: white; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; border-radius: 50%; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+        header h1 { font-size: 24px; font-weight: bold; text-shadow: 1px 1px 3px rgba(0,0,0,0.2); }
+        header p { font-size: 13px; opacity: 0.95; }
+        
+        /* النص المتحرك */
+        .ticker-container { background: #2c3e50; color: #f1c40f; padding: 8px 0; overflow: hidden; white-space: nowrap; font-size: 13px; font-weight: bold; }
+        .ticker-container marquee { width: 100%; }
+
+        /* زر الإدارة في الأعلى */
+        .top-buttons { position: absolute; top: 15px; left: 15px; z-index: 10; }
+        .action-chip { background: rgba(0,0,0,0.3); color: white; border: none; padding: 6px 12px; border-radius: 20px; font-size: 11px; cursor: pointer; backdrop-filter: blur(5px); transition: 0.2s; }
+        .action-chip:hover { background: rgba(0,0,0,0.5); }
+
+        .container { max-width: 950px; margin: 20px auto; padding: 0 15px; }
+
+        /* شريط التنقل الرئيسي والأقسام (مع زر الرئيسية في بدايته) */
+        .nav-bar { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 20px; background: white; padding: 10px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .nav-btn { background: #f1f2f6; border: 1px solid #dcdde1; color: #2f3640; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 13px; font-weight: bold; white-space: nowrap; transition: 0.3s; }
+        .nav-btn.active, .nav-btn:hover { background: #d35400; color: white; border-color: #d35400; }
+        .home-tab { background: #d35400 !important; color: white !important; border-color: #d35400 !important; }
+
+        .section-title { font-size: 18px; margin-bottom: 15px; color: #d35400; border-bottom: 2px solid #d35400; padding-bottom: 5px; display: flex; justify-content: space-between; align-items: center; }
+        
+        /* شبكة المنتجات */
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .card { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 3px 8px rgba(0,0,0,0.08); text-align: center; padding-bottom: 15px; display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.2s; }
+        .card:hover { transform: translateY(-3px); }
+        .card img { width: 100%; height: 140px; object-fit: cover; background: #eee; }
+        .card h3 { font-size: 16px; margin: 10px 5px 5px; color: #2c3e50; }
+        .card .desc { font-size: 12px; color: #666; padding: 0 10px; margin-bottom: 10px; flex-grow: 1; }
+        .card .price { color: #e67e22; font-weight: bold; margin-bottom: 10px; font-size: 15px; }
+        
+        .btn { background: #27ae60; color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: bold; transition: 0.2s; }
+        .btn:hover { background: #219653; }
+        
+        /* زر السلة العائم أسفل الشاشة */
+        .floating-cart-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #2c3e50; color: white; padding: 12px 25px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 -4px 15px rgba(0,0,0,0.2); z-index: 100; cursor: pointer; }
+        .floating-cart-bar span { font-weight: bold; }
+        .view-cart-btn { background: #e67e22; color: white; border: none; padding: 6px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; }
+
+        /* النوافذ المنبثقة (Modals) */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-content { background: white; width: 90%; max-width: 520px; padding: 25px; border-radius: 12px; max-height: 90vh; overflow-y: auto; position: relative; box-shadow: 0 5px 20px rgba(0,0,0,0.3); }
+        .close-modal { position: absolute; top: 12px; left: 18px; font-size: 22px; cursor: pointer; color: #888; }
+        
+        #cart-items-modal { list-style: none; margin-bottom: 15px; max-height: 150px; overflow-y: auto; border-top: 1px solid #eee; border-bottom: 1px solid #eee; padding: 10px 0; }
+        #cart-items-modal li { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; align-items: center; }
+        
+        .cart-summary { font-size: 14px; margin-bottom: 8px; display: flex; justify-content: space-between; }
+        .total { font-weight: bold; margin-bottom: 15px; font-size: 17px; color: #c0392b; border-top: 1px solid #ddd; padding-top: 8px; display: flex; justify-content: space-between; }
+        
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; font-size: 13px; margin-bottom: 4px; font-weight: bold; color: #444; }
+        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 9px; border: 1px solid #ccc; border-radius: 6px; font-size: 13px; }
+
+        /* لوحة تحكم وإدارة الفرن */
+        #admin-panel { display: none; background: white; border: 2px solid #d35400; padding: 20px; border-radius: 10px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(211,84,0,0.15); }
+        .order-card { background: #fff8f0; border: 1px solid #f39c12; padding: 15px; border-radius: 8px; margin-bottom: 12px; position: relative; }
+        .order-header { display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 8px; color: #d35400; border-bottom: 1px dashed #ddd; padding-bottom: 5px; }
+        .order-details { font-size: 13px; line-height: 1.6; color: #333; }
+        
+        .edit-table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; font-size: 12px; }
+        .edit-table th, .edit-table td { border: 1px solid #ddd; padding: 6px; text-align: center; }
+        .edit-table th { background: #f2f2f2; }
+        .edit-table input, .edit-table select { width: 100%; padding: 4px; text-align: center; font-size: 12px; }
+
+        footer { text-align: center; padding: 15px; background: #2c3e50; color: white; font-size: 12px; margin-top: 40px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="top-buttons">
+            <button class="action-chip" onclick="toggleAdminPanel()">📊 لوحة الإدارة (<span id="orders-badge" style="background:#e74c3c; padding:1px 5px; border-radius:10px; font-size:10px;">0</span>)</button>
+        </div>
+        <div class="logo-container">
+            <div class="logo-icon">🍞</div>
+            <div>
+                <h1>أفران أطيب خشّش</h1>
+                <p>أطيب المخبوزات والمعجنات الطازجة يومياً في الحلة</p>
+            </div>
+        </div>
+        <p style="font-size: 11px; margin-top: 6px; opacity: 0.9;">العنوان: بابل - الحلة - خدمي الجمعية - مجاور دينار سنتر</p>
+    </header>
+
+    <!-- النص المتحرك -->
+    <div class="ticker-container">
+        <marquee behavior="scroll" direction="right" scrollamount="5">
+            ✨ أهلاً بكم في أفران أطيب خشّش | توصيل فوري لجميع أنحاء مدينة الحلة | تتوفر لدينا أطعمة وصمون حجري ساخن طوال اليوم 🥖🥐 حلويات وكيك طازج يومياً 🎂
+        </marquee>
+    </div>
+
+    <div class="container">
+
+        <!-- لوحة تحكم وإدارة الفرن -->
+        <div id="admin-panel">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 2px solid #d35400; padding-bottom: 10px;">
+                <h2 style="color: #d35400; font-size: 18px;">🔐 لوحة إدارة الفرن والمنتجات</h2>
+                <button class="btn" style="background: #7f8c8d; padding: 5px 10px; font-size: 12px;" onclick="toggleAdminPanel()">إغلاق اللوحة</button>
+            </div>
+
+            <!-- قسم إضافة منتج جديد -->
+            <div style="background: #fff9f0; border: 1px solid #f39c12; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                <h3 style="font-size: 15px; margin-bottom: 10px; color: #d35400;">➕ إضافة منتج جديد للقائمة</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
+                    <div class="form-group">
+                        <label>القسم:</label>
+                        <select id="new-category">
+                            <option value="صمون ومعجنات">صمون ومعجنات</option>
+                            <option value="خبز">خبز</option>
+                            <option value="حلويات وكيك">حلويات وكيك</option>
+                            <option value="مشروبات">مشروبات</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>اسم المنتج:</label>
+                        <input type="text" id="new-name" placeholder="مثلاً: صمون حجري خاص">
+                    </div>
+                    <div class="form-group">
+                        <label>السعر (د.ع):</label>
+                        <input type="number" id="new-price" placeholder="1000">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>الوصف:</label>
+                    <input type="text" id="new-desc" placeholder="وصف قصير للمنتج...">
+                </div>
+                <div class="form-group">
+                    <label>صورة المنتج (اختر صورة من جهازك):</label>
+                    <input type="file" id="new-img-file" accept="image/*">
+                </div>
+                <button class="btn" onclick="addNewProduct()">إضافة المنتج للقائمة</button>
+            </div>
+
+            <!-- قسم تعديل وحذف المنتجات الحالية -->
+            <div style="background: white; border: 1px solid #ddd; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                <h3 style="font-size: 15px; margin-bottom: 10px; color: #2980b9;">✏️ تعديل أو حذف المنتجات الحالية</h3>
+                <div style="overflow-x: auto; max-height: 250px;">
+                    <table class="edit-table">
+                        <thead>
+                            <tr>
+                                <th>الاسم</th>
+                                <th>القسم</th>
+                                <th>السعر</th>
+                                <th>إجراء</th>
+                            </tr>
+                        </thead>
+                        <tbody id="manage-products-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- قسم متابعة الطلبات الواردة -->
+            <div style="background: #eef2f3; padding: 15px; border-radius: 8px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <h3 style="font-size: 15px; color: #2c3e50;">📋 الطلبات الواردة من الزبائن</h3>
+                    <button class="btn" style="background: #e74c3c; padding: 4px 8px; font-size: 11px;" onclick="clearAllOrders()">مسح كافة الطلبات</button>
+                </div>
+                <div id="incoming-orders-list">
+                    <p style="color: #888; text-align: center;">لا توجد طلبات جديدة حالياً.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- شريط الأقسام (زر الرئيسية أصبح أول زر هنا) -->
+        <div class="nav-bar" id="categories-bar">
+            <button class="nav-btn home-tab active" onclick="goToHome(this)">🏠 الرئيسية</button>
+            <button class="nav-btn" onclick="filterCategory('صمون ومعجنات', this)">🍞 صمون ومعجنات</button>
+            <button class="nav-btn" onclick="filterCategory('خبز', this)">🥖 خبز تنور</button>
+            <button class="nav-btn" onclick="filterCategory('حلويات وكيك', this)">🎂 حلويات وكيك</button>
+            <button class="nav-btn" onclick="filterCategory('مشروبات', this)">🥤 مشروبات</button>
+        </div>
+
+        <h2 class="section-title" id="current-category-title">
+            <span>جميع المنتجات</span>
+            <span style="font-size: 12px; font-weight: normal; color: #666;" id="products-count-label"></span>
+        </h2>
+        
+        <div class="products-grid" id="products-container"></div>
+    </div>
+
+    <!-- شريط السلة العائم أسفل الشاشة -->
+    <div class="floating-cart-bar" onclick="openCartModal()">
+        <div>🛒 سلة الطلبات: <span id="cart-count">0</span> منتج</div>
+        <div>المجموع: <span id="floating-total">0</span> د.ع <button class="view-cart-btn">مراجعة السلة</button></div>
+    </div>
+
+    <!-- نافذة تفاصيل السلة وإدخال المعلومات (Modal) -->
+    <div class="modal" id="cart-modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeCartModal()">&times;</span>
+            <h2 style="margin-bottom: 15px; font-size: 18px; color: #d35400;">🛒 مراجعة السلة وإتمام الطلب</h2>
+            
+            <ul id="cart-items-modal">
+                <li style="color: #888;">السلة فارغة حالياً...</li>
+            </ul>
+            
+            <div class="cart-summary">
+                <span>مجموع المنتجات:</span>
+                <span><span id="sub-total">0</span> د.ع</span>
+            </div>
+            <div class="cart-summary">
+                <span>أجور التوصيل (مركز الحلة):</span>
+                <span>2,000 د.ع</span>
+            </div>
+            <div class="total">
+                <span>المجموع الكلي مع التوصيل:</span>
+                <span><span id="total-price">2,000</span> د.ع</span>
+            </div>
+
+            <!-- معلومات الزبون المطلوبة -->
+            <div style="border-top: 1px dashed #ccc; padding-top: 15px; margin-top: 15px;">
+                <h3 style="font-size: 15px; margin-bottom: 10px; color: #2c3e50;">معلومات الزبون للتوصيل</h3>
+                <div class="form-group">
+                    <label>الاسم الكامل *</label>
+                    <input type="text" id="cust-name" placeholder="أدخل اسمك الكريم">
+                </div>
+                <div class="form-group">
+                    <label>رقم الهاتف *</label>
+                    <input type="tel" id="cust-phone" placeholder="مثلاً: 07800000000">
+                </div>
+                <div class="form-group">
+                    <label>العنوان بالتفصيل *</label>
+                    <input type="text" id="cust-address" value="الحلة - خدمي الجمعية - مجاور دينار سنتر (أو اقرب نقطة دالة)">
+                </div>
+                <div class="form-group">
+                    <label>ملاحظات إضافية (اختياري)</label>
+                    <textarea id="cust-notes" placeholder="ملاحظات حول الطلب..."></textarea>
+                </div>
+                <button class="btn" style="width: 100%; background: #d35400; padding: 11px; font-size: 15px; margin-top: 5px;" onclick="submitOrderToAdmin()">إرسال الطلب إلى الفرن 🚀</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        جميع الحقوق محفوظة © أفران أطيب خشّش - الحلة 2026
+    </footer>
+
+    <script>
+        let products = JSON.parse(localStorage.getItem('bakery_products')) || [
+            { id: 1, name: "صمون حجري حار", category: "صمون ومعجنات", price: 1000, desc: "صمون حجري طازج وحار ساخن وخفيف.", img: "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=300" },
+            { id: 2, name: "معجنات مشكلة بالجبن", category: "صمون ومعجنات", price: 3000, desc: "تشكيلة فاخرة من المعجنات بالجبن واللحم.", img: "https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=300" },
+            { id: 3, name: "خبز تنور طازج", category: "خبز", price: 1000, desc: "خبز تنور طري ولذيذ محضر بعناية.", img: "https://images.unsplash.com/photo-1586444248902-2f64eddc13df?w=300" },
+            { id: 4, name: "كيك منزلي بالفانيلا", category: "حلويات وكيك", price: 5000, desc: "كيك إسفنجي هش محضر بأجود المكونات.", img: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=300" }
+        ];
+
+        let cart = [];
+        let orders = JSON.parse(localStorage.getItem('bakery_orders')) || [];
+        let currentFilter = 'الكل';
+        const deliveryFee = 2000;
+
+        function goToHome(btn) {
+            currentFilter = 'الكل';
+            document.querySelectorAll('.nav-btn').forEach(b => {
+                b.classList.remove('active');
+                b.classList.remove('home-tab');
+            });
+            btn.classList.add('active');
+            btn.classList.add('home-tab');
+            
+            document.getElementById('current-category-title').innerHTML = `<span>جميع المنتجات</span><span style="font-size: 12px; font-weight: normal; color: #666;" id="products-count-label"></span>`;
+            renderProducts();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function filterCategory(category, btn) {
+            currentFilter = category;
+            document.querySelectorAll('.nav-btn').forEach(b => {
+                b.classList.remove('active');
+                b.classList.remove('home-tab');
+            });
+            btn.classList.add('active');
+            document.getElementById('current-category-title').innerHTML = `<span>${category}</span><span style="font-size: 12px; font-weight: normal; color: #666;" id="products-count-label"></span>`;
+            renderProducts();
+        }
+
+        function renderProducts() {
+            const container = document.getElementById('products-container');
+            container.innerHTML = '';
+            
+            let filtered = currentFilter === 'الكل' ? products : products.filter(p => p.category === currentFilter);
+            const countLabel = document.getElementById('products-count-label');
+            if(countLabel) countLabel.innerText = `(${filtered.length} منتج)`;
+
+            if(filtered.length === 0) {
+                container.innerHTML = '<p style="grid-column: 1/-1; text-align:center; color:#888; padding: 20px;">لا توجد منتجات في هذا القسم حالياً.</p>';
+                return;
+            }
+
+            filtered.forEach((p) => {
+                container.innerHTML += `
+                    <div class="card">
+                        <img src="${p.img}" alt="${p.name}">
+                        <div>
+                            <h3>${p.name}</h3>
+                            <div class="desc">${p.desc}</div>
+                        </div>
+                        <div>
+                            <div class="price">${p.price.toLocaleString()} د.ع</div>
+                            <button class="btn" onclick="addToCart(${p.id})">إضافة للطلب</button>
+                        </div>
+                    </div>
+                `;
+            });
+            renderManagementTable();
+        }
+
+        function renderManagementTable() {
+            const tbody = document.getElementById('manage-products-tbody');
+            if(!tbody) return;
+            tbody.innerHTML = '';
+            
+            products.forEach((p, index) => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td><input type="text" value="${p.name}" id="edit-name-${index}" onchange="updateProduct(${index})"></td>
+                        <td>
+                            <select id="edit-cat-${index}" onchange="updateProduct(${index})">
+                                <option value="صمون ومعجنات" ${p.category==='صمون ومعجنات'?'selected':''}>صمون ومعجنات</option>
+                                <option value="خبز" ${p.category==='خبز'?'selected':''}>خبز</option>
+                                <option value="حلويات وكيك" ${p.category==='حلويات وكيك'?'selected':''}>حلويات وكيك</option>
+                                <option value="مشروبات" ${p.category==='مشروبات'?'selected':''}>مشروبات</option>
+                            </select>
+                        </td>
+                        <td><input type="number" value="${p.price}" id="edit-price-${index}" onchange="updateProduct(${index})"></td>
+                        <td><button class="btn" style="background: #e74c3c; padding: 3px 8px; font-size: 11px;" onclick="deleteProduct(${index})">حذف</button></td>
+                    </tr>
+                `;
+            });
+        }
+
+        function updateProduct(index) {
+            let name = document.getElementById(`edit-name-${index}`).value;
+            let cat = document.getElementById(`edit-cat-${index}`).value;
+            let price = parseInt(document.getElementById(`edit-price-${index}`).value);
+            
+            if(name) products[index].name = name;
+            if(cat) products[index].category = cat;
+            if(!isNaN(price)) products[index].price = price;
+            
+            localStorage.setItem('bakery_products', JSON.stringify(products));
+            renderProducts();
+        }
+
+        function deleteProduct(index) {
+            if(confirm("هل أنت متأكد من حذف هذا المنتج؟")) {
+                products.splice(index, 1);
+                localStorage.setItem('bakery_products', JSON.stringify(products));
+                renderProducts();
+            }
+        }
+
+        function addNewProduct() {
+            let name = document.getElementById('new-name').value;
+            let category = document.getElementById('new-category').value;
+            let price = parseInt(document.getElementById('new-price').value);
+            let desc = document.getElementById('new-desc').value;
+            let fileInput = document.getElementById('new-img-file');
+
+            if (!name || isNaN(price)) {
+                alert('يرجى إدخال اسم المنتج وسعره بشكل صحيح!');
+                return;
+            }
+
+            let newId = products.length > 0 ? products[products.length - 1].id + 1 : 1;
+
+            if (fileInput.files && fileInput.files[0]) {
+                let reader = new FileReader();
+                reader.onload = function(e) {
+                    products.push({ id: newId, name, category, price, desc: desc || 'منتج طازج من الفرن', img: e.target.result });
+                    localStorage.setItem('bakery_products', JSON.stringify(products));
+                    renderProducts();
+                    alert('تم إضافة المنتج بنجاح!');
+                    document.getElementById('new-name').value = '';
+                    document.getElementById('new-price').value = '';
+                    document.getElementById('new-desc').value = '';
+                    document.getElementById('new-img-file').value = '';
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            } else {
+                products.push({ id: newId, name, category, price, desc: desc || 'منتج طازج من الفرن', img: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=300' });
+                localStorage.setItem('bakery_products', JSON.stringify(products));
+                renderProducts();
+                alert('تم إضافة المنتج بنجاح!');
+                document.getElementById('new-name').value = '';
+                document.getElementById('new-price').value = '';
+                document.getElementById('new-desc').value = '';
+            }
+        }
+
+        function addToCart(id) {
+            let product = products.find(p => p.id === id);
+            if(product) {
+                cart.push(product);
+                updateCartUI();
+            }
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const countElem = document.getElementById('cart-count');
+            const floatingTotal = document.getElementById('floating-total');
+            const modalList = document.getElementById('cart-items-modal');
+            const subTotalElem = document.getElementById('sub-total');
+            const totalPriceElem = document.getElementById('total-price');
+
+            countElem.innerText = cart.length;
+            
+            let subTotal = cart.reduce((sum, item) => sum + item.price, 0);
+            let grandTotal = subTotal + (cart.length > 0 ? deliveryFee : 0);
+
+            floatingTotal.innerText = grandTotal.toLocaleString();
+            subTotalElem.innerText = subTotal.toLocaleString();
+            totalPriceElem.innerText = grandTotal.toLocaleString();
+
+            if(cart.length === 0) {
+                modalList.innerHTML = '<li style="color: #888;">السلة فارغة حالياً...</li>';
+                return;
+            }
+
+            modalList.innerHTML = '';
+            cart.forEach((item, index) => {
+                modalList.innerHTML += `
+                    <li>
+                        <span>${item.name} - ${item.price.toLocaleString()} د.ع</span>
+                        <button style="background:#e74c3c; color:white; border:none; padding:2px 6px; border-radius:3px; cursor:pointer;" onclick="removeFromCart(${index})">حذف</button>
+                    </li>
+                `;
+            });
+        }
+
+        function openCartModal() {
+            if(cart.length === 0) {
+                alert('السلة فارغة! أضف بعض المنتجات أولاً.');
+                return;
+            }
+            document.getElementById('cart-modal').style.display = 'flex';
+        }
+
+        function closeCartModal() {
+            document.getElementById('cart-modal').style.display = 'none';
+        }
+
+        function submitOrderToAdmin() {
+            let name = document.getElementById('cust-name').value.trim();
+            let phone = document.getElementById('cust-phone').value.trim();
+            let address = document.getElementById('cust-address').value.trim();
+            let notes = document.getElementById('cust-notes').value.trim();
+
+            if(!name || !phone || !address) {
+                alert('يرجى ملء الحقول الإجبارية (الاسم، رقم الهاتف، العنوان)!');
+                return;
+            }
+
+            let subTotal = cart.reduce((sum, item) => sum + item.price, 0);
+            let grandTotal = subTotal + deliveryFee;
+
+            let newOrder = {
+                id: Date.now().toString().slice(-6),
+                date: new Date().toLocaleTimeString('ar-IQ', { hour: '2-digit', minute: '2-digit' }),
+                name,
+                phone,
+                address,
+                notes: notes || 'لا توجد ملاحظات',
+                items: [...cart],
+                subTotal,
+                grandTotal,
+                status: 'قيد التحضير ⏳'
+            };
+
+            orders.unshift(newOrder);
+            localStorage.setItem('bakery_orders', JSON.stringify(orders));
+
+            cart = [];
+            updateCartUI();
+            closeCartModal();
+
+            alert('✅ تم إرسال طلبك بنجاح إلى إدارة الفرن! سيتم تحضيره وتوصيله قريباً.');
+            updateAdminOrdersUI();
+        }
+
+        function toggleAdminPanel() {
+            let panel = document.getElementById('admin-panel');
+            if (panel.style.display === 'block') {
+                panel.style.display = 'none';
+                return;
+            }
+            let password = prompt("الرجاء إدخال رمز المرور الخاص بإدارة الفرن:");
+            if (password === "1234") {
+                panel.style.display = 'block';
+                renderManagementTable();
+                updateAdminOrdersUI();
+                panel.scrollIntoView({ behavior: 'smooth' });
+            } else if (password !== null) {
+                alert("رمز المرور غير صحيح!");
+            }
+        }
+
+        function updateAdminOrdersUI() {
+            const list = document.getElementById('incoming-orders-list');
+            const badge = document.getElementById('orders-badge');
+            if(badge) badge.innerText = orders.length;
+
+            if(!list) return;
+            if(orders.length === 0) {
+                list.innerHTML = '<p style="color: #888; text-align: center;">لا توجد طلبات جديدة حالياً.</p>';
+                return;
+            }
+
+            list.innerHTML = '';
+            orders.forEach((ord, idx) => {
+                let itemsList = ord.items.map(i => `▪ ${i.name} (${i.price.toLocaleString()} د.ع)`).join('<br>');
+                list.innerHTML += `
+                    <div class="order-card">
+                        <div class="order-header">
+                            <span>طلب #${ord.id} - ${ord.name}</span>
+                            <span>${ord.date}</span>
+                        </div>
+                        <div class="order-details">
+                            <p>📞 <b>الهاتف:</b> ${ord.phone}</p>
+                            <p>📍 <b>العنوان:</b> ${ord.address}</p>
+                            <p>📝 <b>ملاحظات:</b> ${ord.notes}</p>
+                            <p style="margin-top: 6px;">🛒 <b>المنتجات:</b><br>${itemsList}</p>
+                            <p style="margin-top: 6px; color: #c0392b; font-weight: bold;">💰 المجموع الكلي: ${ord.grandTotal.toLocaleString()} د.ع</p>
+                            <div style="margin-top: 10px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 5px;">
+                                <span>الحالة: <b style="color: #27ae60;">${ord.status}</b></span>
+                                <div>
+                                    <button class="btn" style="padding: 4px 8px; font-size: 11px;" onclick="changeStatus(${idx}, 'جاري التوصيل 🛵')">جاري التوصيل</button>
+                                    <button class="btn" style="background: #2980b9; padding: 4px 8px; font-size: 11px;" onclick="changeStatus(${idx}, 'تم التسليم ✅')">تم التسليم</button>
+                                    <button class="btn" style="background: #e74c3c; padding: 4px 8px; font-size: 11px;" onclick="deleteOrder(${idx})">حذف</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function changeStatus(index, status) {
+            orders[index].status = status;
+            localStorage.setItem('bakery_orders', JSON.stringify(orders));
+            updateAdminOrdersUI();
+        }
+
+        function deleteOrder(index) {
+            if(confirm("هل تريد حذف هذا الطلب من القائمة؟")) {
+                orders.splice(index, 1);
+                localStorage.setItem('bakery_orders', JSON.stringify(orders));
+                updateAdminOrdersUI();
+            }
+        }
+
+        function clearAllOrders() {
+            if(confirm("هل أنت متأكد من مسح جميع الطلبات؟")) {
+                orders = [];
+                localStorage.removeItem('bakery_orders');
+                updateAdminOrdersUI();
+            }
+        }
+
+        renderProducts();
+        updateAdminOrdersUI();
+    </script>
+</body>
+</html>
